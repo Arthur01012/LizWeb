@@ -65,14 +65,20 @@ body {
 .carousel-slide {
     display: flex;
     width: 100%;
-    height: 350px;
+    height: auto;
+    /* Cambiado a auto para adaptarse a la imagen */
     transition: transform 0.5s ease-in-out;
 }
 
 .carousel-slide img {
-    min-width: 100%;
-    object-fit: cover;
+    width: 100%;
+    height: auto;
+    /* Mantiene la proporción original */
+    object-fit: contain;
+    /* Muestra la imagen completa */
     border-radius: 15px;
+    display: block;
+    /* Elimina espacio inferior */
 }
 
 .carousel-btn {
@@ -140,7 +146,8 @@ body {
 /* Responsive para móviles */
 @media (max-width: 768px) {
     .carousel-slide {
-        height: 250px;
+        height: auto;
+        /* Mantiene auto en móviles */
     }
 
     .carousel-btn {
