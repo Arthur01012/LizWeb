@@ -1,110 +1,19 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Álbum de Google Photos</title>
-    <style>
-        #photos-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 16px;
-            padding: 20px;
-        }
-        img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        #auth-btn {
-            background: #4285F4;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 20px;
-        }
-    </style>
-</head>
-<body>
-    <button id="auth-btn">Iniciar sesión con Google</button>
-    <div id="photos-container"></div>
-
-    <script>
-        // Configuración (usa tu Client ID)
-        const CLIENT_ID = '955561650217-4t86mbg9bdakldu0tcpc2vd98qb5dl2c.apps.googleusercontent.com';
-        const ALBUM_ID = 'AF1QipPNVg1f8Vi-b8w3PtNKSbje7ArU4ayohl4zgN62j6jWpZvgcx4Wd50kwHpEJmUKhQ'; // Reemplaza con tu ID de álbum
-        const SCOPE = 'https://www.googleapis.com/auth/photoslibrary.readonly';
-        const REDIRECT_URI = window.location.origin + '/callback.html'; // Ajusta según tu estructura
-
-        // Elementos del DOM
-        const authBtn = document.getElementById('auth-btn');
-        const photosContainer = document.getElementById('photos-container');
-
-        // 1. Flujo de autenticación
-        authBtn.addEventListener('click', () => {
-            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=${SCOPE}&prompt=consent`;
-            window.location.href = authUrl;
-        });
-
-        // 2. Procesar el token después del login (si está en la URL)
-        if (window.location.hash.includes('access_token')) {
-            const token = window.location.hash.split('access_token=')[1].split('&')[0];
-            localStorage.setItem('google_photos_token', token);
-            window.history.pushState({}, document.title, window.location.pathname); // Limpia la URL
-            loadAlbum();
-        }
-
-        // 3. Cargar el álbum
-        async function loadAlbum() {
-            const token = localStorage.getItem('google_photos_token');
-            if (!token) return;
-
-            try {
-                const response = await fetch(`https://photoslibrary.googleapis.com/v1/mediaItems:search`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        albumId: ALBUM_ID,
-                        pageSize: 50
-                    })
-                });
-
-                const data = await response.json();
-                if (data.mediaItems) {
-                    renderPhotos(data.mediaItems);
-                } else {
-                    photosContainer.innerHTML = '<p>No se encontraron fotos en el álbum.</p>';
-                }
-            } catch (error) {
-                console.error('Error al cargar el álbum:', error);
-                photosContainer.innerHTML = '<p>Error al cargar las fotos. Recarga la página.</p>';
-            }
-        }
-
-        // 4. Renderizar fotos
-        function renderPhotos(photos) {
-            photosContainer.innerHTML = '';
-            photos.forEach(photo => {
-                const img = document.createElement('img');
-                img.src = `${photo.baseUrl}=w800-h600-c`; // Ajusta tamaño (w=ancho, h=alto, c=recortar)
-                img.alt = photo.filename;
-                photosContainer.appendChild(img);
-            });
-        }
-
-        // Cargar álbum si ya hay token
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('google_photos_token')) {
-                loadAlbum();
-            }
-        });
-    </script>
-</body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=+, initial-scale=1.0">
+        <title>LizzyWeb</title>
+    </head>
+    <body>
+        <iframe
+            src="https://photos.google.com/share/AF1QipPNVg1f8Vi-b8w3PtNKSbje7ArU4ayohl4zgN62j6jWpZvgcx4Wd50kwHpEJmUKhQ?key=S2NqZTNXeDJkNHk0UmxmeEVTSTlDVmpFeldpQkVn"
+            width="100%"
+            height="600"
+            frameborder="0"
+            scrolling="no"
+            style="border-radius: 8px;"
+            allowfullscreen>
+        </iframe>
+    </body>
 </html>
