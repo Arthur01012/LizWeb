@@ -1,108 +1,91 @@
-// Contador de días juntos (desde el 5 de abril de 2025, 4 PM)
-function updateLoveCounter() {
-    const startDate = new Date("April 5, 2025 16:00:00").getTime();
-    const now = new Date().getTime();
-    const distance = now - startDate;
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    document.getElementById("days").textContent = days.toString().padStart(2, "0");
-    document.getElementById("hours").textContent = hours.toString().padStart(2, "0");
-    document.getElementById("minutes").textContent = minutes.toString().padStart(2, "0");
-    document.getElementById("seconds").textContent = seconds.toString().padStart(2, "0");
-}
-
-setInterval(updateLoveCounter, 1000);
-updateLoveCounter();
-
-// Carrusel automático de imágenes
-const carouselSlide = document.querySelector(".carousel-slide");
-const prevBtn = document.querySelector(".prev-btn");
-const nextBtn = document.querySelector(".next-btn");
-const dotsContainer = document.querySelector(".carousel-dots");
-
-// Cargar imágenes dinámicamente (1.jpg, 2.jpg, ..., 35.jpg)
-let currentIndex = 0;
-const totalImages = 35;
-let intervalId;
-
-function loadImages() {
-    for (let i = 1; i <= totalImages; i++) {
-        const img = document.createElement("img");
-        img.src = `SongsImages/${i}.jpg`;
-        img.alt = `Fragmento ${i}`;
-        carouselSlide.appendChild(img);
+// Generar corazones flotantes
+function createHearts() {
+    for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = Math.random() * 100 + 'vh';
+        heart.style.opacity = Math.random();
+        heart.style.width = (Math.random() * 15 + 10) + 'px';
+        heart.style.height = heart.style.width;
+        heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        document.body.appendChild(heart);
     }
+}
 
-    // Crear puntos indicadores
-    for (let i = 0; i < totalImages; i++) {
-        const dot = document.createElement("div");
-        dot.classList.add("dot");
-        dot.addEventListener("click", () => {
-            currentIndex = i;
-            updateCarousel();
-            resetInterval();
-        });
-        dotsContainer.appendChild(dot);
+// Generar confeti
+function createConfetti() {
+    for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.backgroundColor = `hsl(${Math.random() * 60 + 330}, 100%, 70%)`;
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confetti.style.width = (Math.random() * 8 + 6) + 'px';
+        confetti.style.height = (Math.random() * 8 + 6) + 'px';
+        document.body.appendChild(confetti);
+
+        // Animación
+        setTimeout(() => {
+            confetti.style.opacity = '1';
+            confetti.style.transform = `translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 + 100}px) rotate(${Math.random() * 360}deg)`;
+            confetti.style.transition = `all ${Math.random() * 1 + 0.5}s ease-out`;
+        }, 10);
     }
-
-    updateDots();
 }
 
-function updateCarousel() {
-    carouselSlide.style.transform = `translateX(-${currentIndex * 100}%)`;
-    updateDots();
-}
+document.addEventListener('DOMContentLoaded', () => {
+    createHearts();
 
-function updateDots() {
-    const dots = document.querySelectorAll(".dot");
-    dots.forEach((dot, index) => {
-        dot.classList.toggle("active", index === currentIndex);
+    document.getElementById('unlockBtn').addEventListener('click', function () {
+        const passwordInput = document.getElementById('passwordInput');
+        const vaultDoor = document.querySelector('.vault-door');
+
+        if (passwordInput.value === '05/04/25') {
+            // Efecto de apertura
+            vaultDoor.classList.add('open');
+            createConfetti();
+
+            // Redirección después de 1.5 segundos
+            setTimeout(() => {
+                window.location.href = './pages/songs.html';
+            }, 1500);
+        } else {
+            // Efecto de error
+            passwordInput.value = '';
+            vaultDoor.classList.add('shake');
+            setTimeout(() => {
+                vaultDoor.classList.remove('shake');
+            }, 500);
+        }
     });
-}
 
-function nextSlide() {
-    currentIndex = (currentIndex + 1) % totalImages;
-    updateCarousel();
-}
-
-function prevSlide() {
-    currentIndex = (currentIndex - 1 + totalImages) % totalImages;
-    updateCarousel();
-}
-
-function startInterval() {
-    intervalId = setInterval(nextSlide, 4000); // Cambia cada 4 segundos
-}
-
-function resetInterval() {
-    clearInterval(intervalId);
-    startInterval();
-}
-
-// Event listeners
-nextBtn.addEventListener("click", () => {
-    nextSlide();
-    resetInterval();
+    // También permite desbloquear con Enter
+    document.getElementById('passwordInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            document.getElementById('unlockBtn').click();
+        }
+    });
 });
 
-prevBtn.addEventListener("click", () => {
-    prevSlide();
-    resetInterval();
-});
+document.addEventListener('DOMContentLoaded', () => {
+    const songs = [
+        './assets/SongsAudios/AURORA - Exist For Love.mp3',
+        './assets/SongsAudios/BWU - Hazel Eyes.mp3',
+        './assets/SongsAudios/Damiano David - Angel.mp3'
+    ];
 
-// Iniciar el carrusel
-loadImages();
-startInterval();
+    const player = document.getElementById('audioPlayer');
 
-// Pausar el carrusel al pasar el mouse (opcional)
-carouselSlide.addEventListener("mouseenter", () => {
-    clearInterval(intervalId);
-});
+    function playRandomSong() {
+        const randomIndex = Math.floor(Math.random() * songs.length);
+        player.src = songs[randomIndex];
+        player.play();
+    }
 
-carouselSlide.addEventListener("mouseleave", () => {
-    startInterval();
+    // Reproduce una al cargar
+    playRandomSong();
+
+    // Cuando termina, reproduce otra
+    player.addEventListener('ended', playRandomSong);
 });

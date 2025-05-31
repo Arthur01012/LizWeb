@@ -1,44 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Para mi Amor ❤️</title>
-        <link rel="stylesheet" href="./styles/index.css">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Mi Tesoro 💘</title>
+        <link rel="stylesheet" href="./styles/index.css" />
         <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap"
+            rel="stylesheet">
     </head>
     <body>
-        <div class="container">
-            <!-- Contador de días juntos -->
-            <section class="counter-section">
-                <h1>Desde que estamos juntos...</h1>
-                <div id="love-counter">
-                    <div><span id="days">00</span><br>Días</div>
-                    <div><span id="hours">00</span><br>Horas</div>
-                    <div><span id="minutes">00</span><br>Minutos</div>
-                    <div><span id="seconds">00</span><br>Segundos</div>
-                </div>
-            </section>
-
-            <!-- Carrusel automático de imágenes -->
-            <section class="carousel-section">
-                <h2>Nuestras Canciones</h2>
-                <div class="carousel-container">
-                    <div class="carousel-slide">
-                        <!-- Las imágenes se insertarán con JavaScript -->
+        <audio id="audioPlayer" controls autoplay hidden></audio>
+        <div class="vault-container">
+            <div class="vault">
+                <div class="vault-door">
+                    <div class="vault-handle"></div>
+                    <div class="vault-display">
+                        <input type="password" id="passwordInput"
+                            placeholder="Fecha mágica (dd/mm/aa)" />
+                        <button id="unlockBtn"><i
+                                class="fas fa-heart-unlock"></i> Entrar</button>
                     </div>
-                    <button class="carousel-btn prev-btn"><i
-                            class="fas fa-chevron-left"></i></button>
-                    <button class="carousel-btn next-btn"><i
-                            class="fas fa-chevron-right"></i></button>
                 </div>
-                <div class="carousel-dots">
-                    <!-- Puntos indicadores (se generan con JS) -->
-                </div>
-            </section>
+                <div class="vault-base"></div>
+            </div>
+            <p class="hint">Pista: El inicio de nuestro amor eterno</p>
         </div>
-
         <script src="./scripts/index.js"></script>
     </body>
 </html>
